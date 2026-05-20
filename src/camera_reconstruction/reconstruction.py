@@ -21,3 +21,17 @@ def backproject_ray(
 
     origin_world = camera_center_world(extrinsics)
     return origin_world, direction_world
+
+
+def pixel_to_camera_point(
+    pixel: np.ndarray | tuple[float, float],
+    depth: float,
+    intrinsics: CameraIntrinsics,
+) -> np.ndarray:
+    if depth <= 0:
+        raise ValueError("depth must be positive")
+
+    pixel = np.asarray(pixel, dtype=float).reshape(2,)
+    K_inv = np.linalg.inv(intrinsics.matrix())
+    ray_camera = K_inv @ np.array([pixel[0], pixel[1], 1.0])
+    return ray_camera * depth

@@ -9,7 +9,7 @@ from camera_reconstruction.camera_model import (
     rotation_matrix_from_euler,
 )
 from camera_reconstruction.projection import project_points
-from camera_reconstruction.reconstruction import backproject_ray
+from camera_reconstruction.reconstruction import backproject_ray, pixel_to_camera_point
 
 
 class SmokeTests(unittest.TestCase):
@@ -42,6 +42,13 @@ class SmokeTests(unittest.TestCase):
 
         center = camera_center_world(extrinsics)
         np.testing.assert_allclose(center, np.array([0.0, 0.0, -3.0]))
+
+    def test_pixel_to_camera_point(self) -> None:
+        intrinsics = CameraIntrinsics(fx=800.0, fy=800.0, cx=320.0, cy=240.0)
+
+        point = pixel_to_camera_point((320.0, 240.0), 3.0, intrinsics)
+
+        np.testing.assert_allclose(point, np.array([0.0, 0.0, 3.0]))
 
 
 if __name__ == "__main__":

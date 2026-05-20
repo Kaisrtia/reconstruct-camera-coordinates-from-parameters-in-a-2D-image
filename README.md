@@ -21,3 +21,17 @@ This project provides a Python scaffold to reconstruct camera coordinates from 2
 
 ## Run tests
 - python -m unittest
+
+## Setup (Ubuntu Bash)
+1) python3 -m venv .venv
+2) source .venv/bin/activate
+
+3) python3 -m pip install --upgrade pip
+4) python3 -m pip install -e .
+
+## Run demo
+- python3 -m camera_reconstruction.demo
+- python3 scripts/run_demo.py
+
+## Run tests
+- python3 -m unittest

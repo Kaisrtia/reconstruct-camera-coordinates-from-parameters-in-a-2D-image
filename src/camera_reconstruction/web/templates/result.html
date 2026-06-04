@@ -1,0 +1,70 @@
+<section class="result-section">
+  <h3>Evaluation</h3>
+  <dl class="metrics">
+    <div>
+      <dt>RMSE</dt>
+      <dd>{{ result.metrics.rmse }} px</dd>
+    </div>
+    <div>
+      <dt>Mean</dt>
+      <dd>{{ result.metrics.mean }} px</dd>
+    </div>
+    <div>
+      <dt>Max</dt>
+      <dd>{{ result.metrics.max }} px</dd>
+    </div>
+    <div>
+      <dt>Points</dt>
+      <dd>{{ result.point_count }}</dd>
+    </div>
+  </dl>
+</section>
+
+<section class="result-section">
+  <h3>Camera Pose</h3>
+  <div class="vector-list">
+    <div><span>rvec</span><code>[{{ result.vectors.rvec | join(", ") }}]</code></div>
+    <div><span>tvec</span><code>[{{ result.vectors.tvec | join(", ") }}]</code></div>
+    <div><span>C_world</span><code>[{{ result.vectors.camera_center | join(", ") }}]</code></div>
+    <div><span>dist</span><code>[{{ result.vectors.distortion | join(", ") }}]</code></div>
+  </div>
+</section>
+
+<section class="result-section matrix-layout">
+  <div>
+    <h3>K</h3>
+    <table class="matrix">
+      {% for row in result.matrices.K %}
+        <tr>{% for value in row %}<td>{{ value }}</td>{% endfor %}</tr>
+      {% endfor %}
+    </table>
+  </div>
+
+  <div>
+    <h3>R</h3>
+    <table class="matrix">
+      {% for row in result.matrices.R %}
+        <tr>{% for value in row %}<td>{{ value }}</td>{% endfor %}</tr>
+      {% endfor %}
+    </table>
+  </div>
+
+  <div>
+    <h3>P = K [R | t]</h3>
+    <table class="matrix">
+      {% for row in result.matrices.P %}
+        <tr>{% for value in row %}<td>{{ value }}</td>{% endfor %}</tr>
+      {% endfor %}
+    </table>
+  </div>
+
+  <div>
+    <h3>Axis Pixels</h3>
+    <table class="matrix">
+      {% for row in result.axis_points %}
+        <tr>{% for value in row %}<td>{{ value }}</td>{% endfor %}</tr>
+      {% endfor %}
+    </table>
+  </div>
+</section>
+

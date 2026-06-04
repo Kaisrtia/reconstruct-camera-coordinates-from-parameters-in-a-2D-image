@@ -1,19 +1,10 @@
 # Reconstruct Camera Coordinates From Parameters in a 2D Image
 
-This project demonstrates inverse perspective projection: reconstructing camera/world information from 2D image coordinates and known camera parameters.
+This project demonstrates inverse perspective reconstruction for a 2D image. The current application solves a Perspective-n-Point (PnP) problem from checkerboard correspondences, estimates camera extrinsics, computes reprojection error, and renders 3D coordinate axes on top of the uploaded image.
 
-The program includes:
+## Core Theory
 
-- A pinhole camera model with intrinsic matrix `K`
-- Camera extrinsic parameters `R` and `t`
-- Forward projection from 3D world points to 2D image pixels
-- Inverse projection from 2D pixels back to 3D rays
-- Camera-coordinate reconstruction when depth is known
-- Output images for evaluation and reporting
-
-## Theory
-
-A 3D world point is projected to the image by:
+A 3D world point is projected to an image by:
 
 ```text
 s [u, v, 1]^T = K [R | t] [X, Y, Z, 1]^T
@@ -21,57 +12,64 @@ s [u, v, 1]^T = K [R | t] [X, Y, Z, 1]^T
 
 Where:
 
-- `K` is the intrinsic matrix: focal length and principal point
-- `R` is the rotation matrix
-- `t` is the translation vector
-- `[u, v]` is the 2D image pixel
-- `s` is a scale factor related to depth
+- `K` is the intrinsic matrix.
+- `R` and `t` are extrinsic parameters.
+- `[u, v]` is the 2D image pixel.
+- `s` is the homogeneous scale factor related to depth.
 
-Forward projection is:
-
-```text
-3D point -> 2D image pixel
-```
-
-Inverse projection is:
+OpenCV represents extrinsics as a world-to-camera transform:
 
 ```text
-2D image pixel -> 3D ray
+X_camera = R * X_world + t
 ```
 
-A single 2D pixel does not define one unique 3D point. It defines a ray that starts at the camera center and travels through the image plane. To recover one exact 3D camera coordinate, depth must be known or another geometric constraint must be provided.
-
-For a known camera-space depth `Zc`, a pixel can be reconstructed in camera coordinates by:
+Therefore `t` is not the camera position. The camera center in world coordinates is:
 
 ```text
-[Xc, Yc, Zc]^T = Zc * K^-1 [u, v, 1]^T
+C_world = -R^T * t
 ```
+
+## Web Application Flow
+
+1. Upload a checkerboard image.
+2. Enter checkerboard internal-corner counts and square size.
+3. Enter camera intrinsic values `fx`, `fy`, `cx`, `cy`, and `skew`. If focal/principal-point values are blank, the app uses practical image-size defaults.
+4. The backend detects checkerboard corners with OpenCV.
+5. It builds matching 3D object points on the checkerboard plane `Z = 0`.
+6. `cv2.solvePnP` estimates `rvec` and `tvec`.
+7. The app reprojects object points to compute reprojection error.
+8. The app projects a 3D XYZ axis and draws it over the original uploaded image.
 
 ## Project Structure
 
 ```text
 src/camera_reconstruction/
-  camera_model.py      camera intrinsics, extrinsics, projection matrix
-  projection.py        forward projection 3D -> 2D
-  reconstruction.py    inverse projection 2D -> ray / camera point
-  demo.py              runnable assignment demo
+  core/
+    camera_model.py       camera intrinsics, extrinsics, projection matrix
+    projection.py         forward projection, World Space -> Camera Space -> Image
+    reconstruction.py     inverse projection from pixel to ray/camera point
+    checkerboard.py       checkerboard 2D detection and 3D object-point generation
+    pnp_solver.py         solvePnP, Rodrigues, camera center, reprojection error
+    overlay.py            projected 3D axis rendering on uploaded images
+  services/
+    reconstruction_service.py
+  storage/
+    files.py
+  web/
+    main.py
+    routes.py
+    schemas.py
+    templates/
+    static/
 scripts/
-  run_demo.py          script entry point
+  run_demo.py
+  run_web.py
 tests/
-  test_smoke.py        basic correctness tests
 ```
+
+Compatibility wrappers remain at `src/camera_reconstruction/camera_model.py`, `projection.py`, and `reconstruction.py` so the original CLI demo/tests keep working.
 
 ## Setup
-
-On Linux/macOS:
-
-```bash
-cd "/run/media/kaisrtia/Data/Project Github/reconstruct-camera-coordinates-from-parameters-in-a-2D-image"
-python3 -m venv .venv
-source .venv/bin/activate
-python3 -m pip install --upgrade pip
-python3 -m pip install -e .
-```
 
 On Windows PowerShell:
 
@@ -82,51 +80,41 @@ python -m pip install --upgrade pip
 python -m pip install -e .
 ```
 
-## Run The Demo
+## Run The Web App
 
-```bash
-python3 -m camera_reconstruction.demo
+```powershell
+python scripts\run_web.py
 ```
 
-Or:
-
-```bash
-python3 scripts/run_demo.py
-```
-
-If your project folder is on a read-only mounted drive, choose another output directory:
-
-```bash
-python3 -m camera_reconstruction.demo --out-dir /tmp/camera-reconstruction-output
-```
-
-The program prints:
-
-- Intrinsic matrix `K`
-- Rotation matrix `R`
-- Translation vector `t`
-- Projection matrix `P = K [R | t]`
-- Camera center in world coordinates
-- Backprojected ray origin and direction for selected pixels
-- Reconstructed camera coordinate for selected pixels when depth is known
-
-The program saves:
+Then open:
 
 ```text
-outputs/projection_2d.png
-outputs/backprojected_rays_3d.png
+http://127.0.0.1:8000
+```
+
+Runtime uploads and rendered outputs are written under `var/`, which is ignored by git.
+
+## Run The CLI Demo
+
+```powershell
+python scripts\run_demo.py
 ```
 
 ## Run Tests
 
-```bash
-python3 -m unittest discover -s tests
+```powershell
+python -m unittest discover -s tests
 ```
 
-## Evaluation And Comments
+## Evaluation Data
 
-- The forward projection result shows how 3D grid points become 2D image pixels.
-- The inverse projection result shows that each selected 2D pixel becomes a 3D ray.
-- A unique 3D point cannot be reconstructed from only one 2D point without depth.
-- If depth is supplied, the pixel can be converted to a concrete camera coordinate.
-- Accuracy depends on the correctness of the intrinsic parameters, rotation, translation, and depth value.
+The result page displays:
+
+- Intrinsic matrix `K`.
+- Rotation matrix `R`.
+- Translation vector `tvec`.
+- Camera center `C_world`.
+- Projection matrix `P = K [R | t]`.
+- Reprojection RMSE, mean error, and max error in pixels.
+- Axis endpoint pixels used for the overlay.
+

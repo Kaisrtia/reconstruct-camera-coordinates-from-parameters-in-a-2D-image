@@ -9,9 +9,13 @@ description = "Reconstruct camera coordinates from 2D image parameters"
 readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [
+  "fastapi>=0.115.0",
+  "jinja2>=3.1.0",
   "numpy>=1.26.0",
   "matplotlib>=3.8.0",
   "opencv-python>=4.9.0",
+  "python-multipart>=0.0.9",
+  "uvicorn[standard]>=0.30.0",
 ]
 
 [tool.setuptools]
@@ -19,3 +23,9 @@ package-dir = {"" = "src"}
 
 [tool.setuptools.packages.find]
 where = ["src"]
+
+[tool.setuptools.package-data]
+"camera_reconstruction.web" = [
+  "templates/*.html",
+  "static/css/*.css",
+]

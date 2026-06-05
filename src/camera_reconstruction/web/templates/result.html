@@ -1,70 +1,128 @@
-<section class="result-section">
-  <h3>Evaluation</h3>
-  <dl class="metrics">
-    <div>
-      <dt>RMSE</dt>
-      <dd>{{ result.metrics.rmse }} px</dd>
-    </div>
-    <div>
-      <dt>Mean</dt>
-      <dd>{{ result.metrics.mean }} px</dd>
-    </div>
-    <div>
-      <dt>Max</dt>
-      <dd>{{ result.metrics.max }} px</dd>
-    </div>
-    <div>
-      <dt>Points</dt>
-      <dd>{{ result.point_count }}</dd>
-    </div>
-  </dl>
+<section class="metrics-grid" aria-label="Evaluation metrics">
+  <article class="metric-card primary">
+    <span>RMSE</span>
+    <strong>{{ result.metrics.rmse }}</strong>
+    <small>px</small>
+  </article>
+  <article class="metric-card">
+    <span>Mean Error</span>
+    <strong>{{ result.metrics.mean }}</strong>
+    <small>px</small>
+  </article>
+  <article class="metric-card">
+    <span>Max Error</span>
+    <strong>{{ result.metrics.max }}</strong>
+    <small>px</small>
+  </article>
+  <article class="metric-card">
+    <span>Detected Points</span>
+    <strong>{{ result.point_count }}</strong>
+    <small>corners</small>
+  </article>
 </section>
 
-<section class="result-section">
-  <h3>Camera Pose</h3>
-  <div class="vector-list">
-    <div><span>rvec</span><code>[{{ result.vectors.rvec | join(", ") }}]</code></div>
-    <div><span>tvec</span><code>[{{ result.vectors.tvec | join(", ") }}]</code></div>
-    <div><span>C_world</span><code>[{{ result.vectors.camera_center | join(", ") }}]</code></div>
-    <div><span>dist</span><code>[{{ result.vectors.distortion | join(", ") }}]</code></div>
+<section class="analysis-panel">
+  <div class="tabs">
+    <input class="tab-control" type="radio" name="result-tabs" id="tab-pose" checked>
+    <input class="tab-control" type="radio" name="result-tabs" id="tab-matrices">
+    <input class="tab-control" type="radio" name="result-tabs" id="tab-conversion">
+    <input class="tab-control" type="radio" name="result-tabs" id="tab-axis">
+
+    <div class="tab-list" role="tablist">
+      <label for="tab-pose">Pose</label>
+      <label for="tab-matrices">Matrices</label>
+      <label for="tab-conversion">2D/3D Samples</label>
+      <label for="tab-axis">Axis Pixels</label>
+    </div>
+
+    <div class="tab-content pose-tab">
+      <div class="vector-grid">
+        <article>
+          <span>rvec</span>
+          <code>[{{ result.vectors.rvec | join(", ") }}]</code>
+        </article>
+        <article>
+          <span>tvec</span>
+          <code>[{{ result.vectors.tvec | join(", ") }}]</code>
+        </article>
+        <article>
+          <span>C_world</span>
+          <code>[{{ result.vectors.camera_center | join(", ") }}]</code>
+        </article>
+        <article>
+          <span>dist</span>
+          <code>[{{ result.vectors.distortion | join(", ") }}]</code>
+        </article>
+      </div>
+    </div>
+
+    <div class="tab-content matrices-tab">
+      <div class="matrix-layout">
+        <article class="matrix-card">
+          <h3>K</h3>
+          <table class="matrix">
+            {% for row in result.matrices.K %}
+              <tr>{% for value in row %}<td>{{ value }}</td>{% endfor %}</tr>
+            {% endfor %}
+          </table>
+        </article>
+        <article class="matrix-card">
+          <h3>R</h3>
+          <table class="matrix">
+            {% for row in result.matrices.R %}
+              <tr>{% for value in row %}<td>{{ value }}</td>{% endfor %}</tr>
+            {% endfor %}
+          </table>
+        </article>
+        <article class="matrix-card wide">
+          <h3>P = K [R | t]</h3>
+          <table class="matrix">
+            {% for row in result.matrices.P %}
+              <tr>{% for value in row %}<td>{{ value }}</td>{% endfor %}</tr>
+            {% endfor %}
+          </table>
+        </article>
+      </div>
+    </div>
+
+    <div class="tab-content conversion-tab">
+      <div class="table-scroll">
+        <table class="conversion-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Image 2D [u, v]</th>
+              <th>World 3D [X, Y, Z]</th>
+              <th>Camera 3D [Xc, Yc, Zc]</th>
+              <th>Reprojected 2D</th>
+              <th>Error px</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for row in result.conversion_rows %}
+              <tr>
+                <td>{{ row.index }}</td>
+                <td><code>{{ row.image_2d }}</code></td>
+                <td><code>{{ row.world_3d }}</code></td>
+                <td><code>{{ row.camera_3d }}</code></td>
+                <td><code>{{ row.reprojected_2d }}</code></td>
+                <td>{{ row.error }}</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="tab-content axis-tab">
+      <article class="matrix-card">
+        <h3>Axis Pixels</h3>
+        <table class="matrix">
+          {% for row in result.axis_points %}
+            <tr>{% for value in row %}<td>{{ value }}</td>{% endfor %}</tr>
+          {% endfor %}
+        </table>
+      </article>
+    </div>
   </div>
 </section>
-
-<section class="result-section matrix-layout">
-  <div>
-    <h3>K</h3>
-    <table class="matrix">
-      {% for row in result.matrices.K %}
-        <tr>{% for value in row %}<td>{{ value }}</td>{% endfor %}</tr>
-      {% endfor %}
-    </table>
-  </div>
-
-  <div>
-    <h3>R</h3>
-    <table class="matrix">
-      {% for row in result.matrices.R %}
-        <tr>{% for value in row %}<td>{{ value }}</td>{% endfor %}</tr>
-      {% endfor %}
-    </table>
-  </div>
-
-  <div>
-    <h3>P = K [R | t]</h3>
-    <table class="matrix">
-      {% for row in result.matrices.P %}
-        <tr>{% for value in row %}<td>{{ value }}</td>{% endfor %}</tr>
-      {% endfor %}
-    </table>
-  </div>
-
-  <div>
-    <h3>Axis Pixels</h3>
-    <table class="matrix">
-      {% for row in result.axis_points %}
-        <tr>{% for value in row %}<td>{{ value }}</td>{% endfor %}</tr>
-      {% endfor %}
-    </table>
-  </div>
-</section>
-

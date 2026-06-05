@@ -93,6 +93,7 @@ async def reconstruct(
 
 def _result_view_model(result: ReconstructionResult) -> dict[str, Any]:
     pnp = result.pnp
+    camera_points = (pnp.R @ result.checkerboard.object_points.T).T + pnp.tvec.reshape(1, 3)
     return {
         "overlay_url": f"/results/{result.overlay_image_path.name}",
         "image_size": f"{result.image_width} x {result.image_height}",
@@ -114,6 +115,13 @@ def _result_view_model(result: ReconstructionResult) -> dict[str, Any]:
             "P": _format_matrix(pnp.projection_matrix),
         },
         "axis_points": _format_matrix(result.overlay.axis_image_points),
+        "conversion_rows": _format_conversion_rows(
+            result.checkerboard.object_points,
+            result.checkerboard.image_points,
+            camera_points,
+            pnp.reprojected_points,
+            pnp.reprojection_errors,
+        ),
     }
 
 
@@ -128,3 +136,31 @@ def _format_vector(values: np.ndarray) -> list[str]:
 def _format_matrix(values: np.ndarray) -> list[list[str]]:
     matrix = np.asarray(values, dtype=float)
     return [[_format_number(value) for value in row] for row in matrix]
+
+
+def _format_conversion_rows(
+    object_points: np.ndarray,
+    image_points: np.ndarray,
+    camera_points: np.ndarray,
+    reprojected_points: np.ndarray,
+    errors: np.ndarray,
+    limit: int = 10,
+) -> list[dict[str, str]]:
+    rows = []
+    count = min(limit, object_points.shape[0])
+    for index in range(count):
+        rows.append(
+            {
+                "index": str(index + 1),
+                "image_2d": _format_tuple(image_points[index]),
+                "world_3d": _format_tuple(object_points[index]),
+                "camera_3d": _format_tuple(camera_points[index]),
+                "reprojected_2d": _format_tuple(reprojected_points[index]),
+                "error": _format_number(errors[index]),
+            }
+        )
+    return rows
+
+
+def _format_tuple(values: np.ndarray) -> str:
+    return "[" + ", ".join(_format_vector(values)) + "]"

@@ -2,102 +2,118 @@
 
 {% block content %}
 <main class="workspace">
-  <form class="panel controls" action="/reconstruct" method="post" enctype="multipart/form-data">
-    <div class="panel-heading">
-      <h2>Input</h2>
-      <button type="submit">Run PnP</button>
+  <aside class="sidebar">
+    <form class="control-panel" action="/reconstruct" method="post" enctype="multipart/form-data">
+      <div class="sidebar-heading">
+        <div>
+          <p>Experiment Setup</p>
+          <h2>Input</h2>
+        </div>
+        <button type="submit">Run PnP</button>
+      </div>
+
+      {% if error %}
+        <div class="alert">{{ error }}</div>
+      {% endif %}
+
+      <section class="input-card">
+        <h3>Image</h3>
+        <label>
+          Upload
+          <input name="image" type="file" accept="image/*" required>
+        </label>
+      </section>
+
+      <details class="input-card" open>
+        <summary>Checkerboard</summary>
+        <div class="accordion-body">
+          <div class="form-grid two">
+            <label>
+              Corners X
+              <input name="corners_x" type="number" min="2" step="1" value="{{ form.corners_x }}" required>
+            </label>
+            <label>
+              Corners Y
+              <input name="corners_y" type="number" min="2" step="1" value="{{ form.corners_y }}" required>
+            </label>
+          </div>
+          <div class="form-grid two">
+            <label>
+              Square size
+              <input name="square_size" type="number" min="0.000001" step="any" value="{{ form.square_size }}" required>
+            </label>
+            <label>
+              Axis length
+              <input name="axis_length" type="number" min="0.000001" step="any" value="{{ form.axis_length }}">
+            </label>
+          </div>
+        </div>
+      </details>
+
+      <details class="input-card">
+        <summary>Intrinsic Matrix K</summary>
+        <div class="accordion-body">
+          <div class="form-grid two">
+            <label>
+              fx
+              <input name="fx" type="number" min="0.000001" step="any" value="{{ form.fx }}">
+            </label>
+            <label>
+              fy
+              <input name="fy" type="number" min="0.000001" step="any" value="{{ form.fy }}">
+            </label>
+          </div>
+          <div class="form-grid two">
+            <label>
+              cx
+              <input name="cx" type="number" step="any" value="{{ form.cx }}">
+            </label>
+            <label>
+              cy
+              <input name="cy" type="number" step="any" value="{{ form.cy }}">
+            </label>
+          </div>
+          <label>
+            skew
+            <input name="skew" type="number" step="any" value="{{ form.skew }}">
+          </label>
+        </div>
+      </details>
+
+      <details class="input-card">
+        <summary>Distortion</summary>
+        <div class="accordion-body">
+          <label>
+            Coefficients
+            <input name="distortion_coefficients" type="text" value="{{ form.distortion_coefficients }}" placeholder="k1, k2, p1, p2, k3">
+          </label>
+        </div>
+      </details>
+    </form>
+  </aside>
+
+  <section class="dashboard">
+    <div class="dashboard-header">
+      <div>
+        <p>Perspective-n-Point Result</p>
+        <h2>Output</h2>
+      </div>
+      {% if result %}
+        <span class="image-size">{{ result.image_size }} px</span>
+      {% endif %}
     </div>
 
-    {% if error %}
-      <div class="alert">{{ error }}</div>
-    {% endif %}
-
-    <fieldset>
-      <legend>Image</legend>
-      <label>
-        Upload
-        <input name="image" type="file" accept="image/*" required>
-      </label>
-    </fieldset>
-
-    <fieldset>
-      <legend>Checkerboard</legend>
-      <div class="form-grid two">
-        <label>
-          Corners X
-          <input name="corners_x" type="number" min="2" step="1" value="{{ form.corners_x }}" required>
-        </label>
-        <label>
-          Corners Y
-          <input name="corners_y" type="number" min="2" step="1" value="{{ form.corners_y }}" required>
-        </label>
-      </div>
-      <div class="form-grid two">
-        <label>
-          Square size
-          <input name="square_size" type="number" min="0.000001" step="any" value="{{ form.square_size }}" required>
-        </label>
-        <label>
-          Axis length
-          <input name="axis_length" type="number" min="0.000001" step="any" value="{{ form.axis_length }}">
-        </label>
-      </div>
-    </fieldset>
-
-    <fieldset>
-      <legend>Intrinsic Matrix K</legend>
-      <div class="form-grid two">
-        <label>
-          fx
-          <input name="fx" type="number" min="0.000001" step="any" value="{{ form.fx }}">
-        </label>
-        <label>
-          fy
-          <input name="fy" type="number" min="0.000001" step="any" value="{{ form.fy }}">
-        </label>
-      </div>
-      <div class="form-grid two">
-        <label>
-          cx
-          <input name="cx" type="number" step="any" value="{{ form.cx }}">
-        </label>
-        <label>
-          cy
-          <input name="cy" type="number" step="any" value="{{ form.cy }}">
-        </label>
-      </div>
-      <label>
-        skew
-        <input name="skew" type="number" step="any" value="{{ form.skew }}">
-      </label>
-    </fieldset>
-
-    <fieldset>
-      <legend>Distortion</legend>
-      <label>
-        Coefficients
-        <input name="distortion_coefficients" type="text" value="{{ form.distortion_coefficients }}" placeholder="k1, k2, p1, p2, k3">
-      </label>
-    </fieldset>
-  </form>
-
-  <section class="panel output">
     {% if result %}
-      <div class="panel-heading">
-        <h2>Output</h2>
-        <span>{{ result.image_size }} px</span>
-      </div>
-      <figure class="image-viewer">
+      <figure class="image-stage">
         <img src="{{ result.overlay_url }}" alt="3D coordinate axes projected onto uploaded image">
       </figure>
       {% include "result.html" %}
     {% else %}
       <div class="empty-output">
-        <h2>Output</h2>
+        <h2>Waiting for reconstruction</h2>
         <p>No reconstruction result yet.</p>
       </div>
     {% endif %}
   </section>
 </main>
 {% endblock %}
-

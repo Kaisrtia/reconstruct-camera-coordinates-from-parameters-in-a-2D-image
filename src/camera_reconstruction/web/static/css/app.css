@@ -304,6 +304,31 @@ input[type="file"] {
   object-fit: contain;
 }
 
+.result-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 12px;
+}
+
+.download-link {
+  min-height: 38px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #07565b;
+  border-radius: 7px;
+  padding: 0 13px;
+  background: var(--accent);
+  color: #ffffff;
+  font-size: 0.86rem;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.download-link:hover {
+  background: #07565b;
+}
+
 .empty-output {
   min-height: 620px;
   display: grid;
@@ -638,6 +663,14 @@ code {
   }
 
   button {
+    width: 100%;
+  }
+
+  .result-actions {
+    justify-content: stretch;
+  }
+
+  .download-link {
     width: 100%;
   }
 

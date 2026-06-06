@@ -107,6 +107,9 @@
       <figure class="image-stage">
         <img src="{{ result.overlay_url }}" alt="3D coordinate axes projected onto uploaded image">
       </figure>
+      <div class="result-actions">
+        <a class="download-link" href="{{ result.overlay_url }}" download>Download Overlay Image</a>
+      </div>
       {% include "result.html" %}
     {% else %}
       <div class="empty-output">

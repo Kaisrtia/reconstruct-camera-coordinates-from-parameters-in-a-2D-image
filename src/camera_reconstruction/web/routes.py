@@ -31,6 +31,11 @@ async def index(request: Request) -> HTMLResponse:
     )
 
 
+@router.get("/guide", response_class=HTMLResponse)
+async def guide(request: Request) -> HTMLResponse:
+    return templates.TemplateResponse(request, "guide.html", {})
+
+
 @router.post("/reconstruct", response_class=HTMLResponse)
 async def reconstruct(
     request: Request,

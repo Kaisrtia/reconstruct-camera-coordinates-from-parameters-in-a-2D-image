@@ -55,7 +55,23 @@ def main() -> None:
 
 def _render_navigation() -> str:
     with st.sidebar:
-        return st.radio("View", ["Dashboard", "Guide"], horizontal=True)
+        st.markdown(
+            """
+            <div class="nav-panel">
+              <span>Workspace</span>
+              <strong>Camera Reconstruction</strong>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
+        return st.segmented_control(
+            "View mode",
+            ["Dashboard", "Guide"],
+            default="Dashboard",
+            required=True,
+            label_visibility="collapsed",
+            width="stretch",
+        )
 
 
 def _render_header() -> None:
@@ -77,34 +93,34 @@ def _render_guide() -> None:
         """
         <div class="st-guide-hero">
           <span>Usage guide</span>
-          <h2>Quy trinh chay thi nghiem PnP</h2>
-          <p>Trang nay tom tat cac buoc de upload checkerboard, chay solvePnP va doc ket qua phuc vu bao cao.</p>
+          <h2>Perspective-n-Point reconstruction workflow</h2>
+          <p>Use this guide to prepare a checkerboard image, run pose estimation, and interpret the camera reconstruction output.</p>
         </div>
         <div class="st-guide-grid">
           <article>
             <strong>01</strong>
-            <h3>Chuan bi anh</h3>
-            <p>Chon anh checkerboard ro net, thay du cac goc trong, khong bi che khuat va khong qua mo.</p>
+            <h3>Prepare the image</h3>
+            <p>Use a clear checkerboard photo where the internal corners are visible, sharp, and not blocked by reflections or motion blur.</p>
           </article>
           <article>
             <strong>02</strong>
-            <h3>Nhap checkerboard</h3>
-            <p>Corners X va Corners Y la so goc trong. Square size la kich thuoc mot o vuong theo cung mot don vi.</p>
+            <h3>Set board parameters</h3>
+            <p>Corners X and Corners Y are internal-corner counts. Square size is the physical size of one square in a consistent unit.</p>
           </article>
           <article>
             <strong>03</strong>
-            <h3>Chay PnP</h3>
-            <p>Neu khong co camera calibration, co the de mac dinh K. Neu co thong so that, nhap fx, fy, cx, cy.</p>
+            <h3>Run pose estimation</h3>
+            <p>Leave the intrinsic matrix at its default estimate when calibration is unavailable, or enter fx, fy, cx, and cy if known.</p>
           </article>
           <article>
             <strong>04</strong>
-            <h3>Doc ket qua</h3>
-            <p>Anh overlay hien truc X/Y/Z. RMSE, Mean Error va Max Error cang nho thi phep chieu lai cang khop.</p>
+            <h3>Review the result</h3>
+            <p>The overlay shows projected X/Y/Z axes. Lower RMSE, mean error, and max error indicate a tighter reprojection fit.</p>
           </article>
         </div>
         <div class="st-guide-note">
-          <h3>Luu y cho bao cao</h3>
-          <p>Chuong trinh uoc luong pose camera tu cac cap diem 2D/3D da biet tren checkerboard. Mot pixel 2D rieng le chi tao ra mot tia 3D neu khong co depth hoac rang buoc hinh hoc.</p>
+          <h3>Interpretation and limitations</h3>
+          <p>This application estimates camera pose from known 3D checkerboard points and their detected 2D image positions. The result should be reported as a Perspective-n-Point reconstruction, including R, tvec, C_world, the projection matrix, and reprojection error. A single 2D pixel alone does not define a unique 3D point without depth or an additional geometric constraint.</p>
         </div>
         """,
         unsafe_allow_html=True,
@@ -337,6 +353,35 @@ def _apply_dashboard_styles() -> None:
             border-radius: 8px;
             padding: 10px;
             background: #101820;
+          }
+          .nav-panel {
+            border: 1px solid #d7e0e8;
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, #ffffff 0%, #eef8f7 100%);
+          }
+          .nav-panel span {
+            display: block;
+            color: #0b6f76;
+            font-size: 0.72rem;
+            font-weight: 850;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+          }
+          .nav-panel strong {
+            display: block;
+            margin-top: 2px;
+            color: #151b23;
+            font-size: 0.95rem;
+          }
+          div[data-testid="stSegmentedControl"] {
+            margin-bottom: 16px;
+          }
+          div[data-testid="stSegmentedControl"] label {
+            min-height: 40px;
+            border-radius: 8px;
+            font-weight: 800;
           }
           .st-guide-hero,
           .st-guide-note,

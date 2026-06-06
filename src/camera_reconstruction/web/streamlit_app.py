@@ -30,7 +30,12 @@ RESULTS_DIR = ensure_directory(VAR_DIR / "results")
 
 def main() -> None:
     _apply_dashboard_styles()
+    page = _render_navigation()
     _render_header()
+
+    if page == "Guide":
+        _render_guide()
+        return
 
     config, uploaded_image, run_clicked = _render_sidebar()
 
@@ -48,6 +53,11 @@ def main() -> None:
     _render_result(result)
 
 
+def _render_navigation() -> str:
+    with st.sidebar:
+        return st.radio("View", ["Dashboard", "Guide"], horizontal=True)
+
+
 def _render_header() -> None:
     st.markdown(
         """
@@ -56,6 +66,45 @@ def _render_header() -> None:
             <span>Perspective-n-Point Dashboard</span>
             <h1>Camera PnP Reconstruction</h1>
           </div>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+
+
+def _render_guide() -> None:
+    st.markdown(
+        """
+        <div class="st-guide-hero">
+          <span>Usage guide</span>
+          <h2>Quy trinh chay thi nghiem PnP</h2>
+          <p>Trang nay tom tat cac buoc de upload checkerboard, chay solvePnP va doc ket qua phuc vu bao cao.</p>
+        </div>
+        <div class="st-guide-grid">
+          <article>
+            <strong>01</strong>
+            <h3>Chuan bi anh</h3>
+            <p>Chon anh checkerboard ro net, thay du cac goc trong, khong bi che khuat va khong qua mo.</p>
+          </article>
+          <article>
+            <strong>02</strong>
+            <h3>Nhap checkerboard</h3>
+            <p>Corners X va Corners Y la so goc trong. Square size la kich thuoc mot o vuong theo cung mot don vi.</p>
+          </article>
+          <article>
+            <strong>03</strong>
+            <h3>Chay PnP</h3>
+            <p>Neu khong co camera calibration, co the de mac dinh K. Neu co thong so that, nhap fx, fy, cx, cy.</p>
+          </article>
+          <article>
+            <strong>04</strong>
+            <h3>Doc ket qua</h3>
+            <p>Anh overlay hien truc X/Y/Z. RMSE, Mean Error va Max Error cang nho thi phep chieu lai cang khop.</p>
+          </article>
+        </div>
+        <div class="st-guide-note">
+          <h3>Luu y cho bao cao</h3>
+          <p>Chuong trinh uoc luong pose camera tu cac cap diem 2D/3D da biet tren checkerboard. Mot pixel 2D rieng le chi tao ra mot tia 3D neu khong co depth hoac rang buoc hinh hoc.</p>
         </div>
         """,
         unsafe_allow_html=True,
@@ -278,6 +327,54 @@ def _apply_dashboard_styles() -> None:
             border-radius: 8px;
             padding: 10px;
             background: #101820;
+          }
+          .st-guide-hero,
+          .st-guide-note,
+          .st-guide-grid article {
+            border: 1px solid #d7e0e8;
+            border-radius: 8px;
+            background: #ffffff;
+          }
+          .st-guide-hero,
+          .st-guide-note {
+            padding: 18px 20px;
+            margin-bottom: 16px;
+          }
+          .st-guide-hero span {
+            color: #0b6f76;
+            font-size: 0.78rem;
+            font-weight: 800;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+          }
+          .st-guide-hero h2,
+          .st-guide-note h3,
+          .st-guide-grid h3 {
+            margin: 4px 0 0;
+            letter-spacing: 0;
+          }
+          .st-guide-hero p,
+          .st-guide-note p,
+          .st-guide-grid p {
+            color: #607083;
+            margin-bottom: 0;
+          }
+          .st-guide-grid {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 12px;
+            margin-bottom: 16px;
+          }
+          .st-guide-grid article {
+            padding: 14px;
+          }
+          .st-guide-grid strong {
+            color: #0b6f76;
+          }
+          @media (max-width: 900px) {
+            .st-guide-grid {
+              grid-template-columns: 1fr;
+            }
           }
           code, pre {
             font-family: Consolas, "SFMono-Regular", "Courier New", monospace;

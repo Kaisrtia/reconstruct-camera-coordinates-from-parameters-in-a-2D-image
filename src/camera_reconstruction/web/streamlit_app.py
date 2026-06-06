@@ -201,6 +201,13 @@ def _render_result(result: ReconstructionResult) -> None:
         st.markdown("### 3D Axis Overlay")
         overlay_rgb = _read_overlay_rgb(result.overlay_image_path)
         st.image(overlay_rgb, use_container_width=True)
+        st.download_button(
+            "Download Overlay Image",
+            data=result.overlay_image_path.read_bytes(),
+            file_name=result.overlay_image_path.name,
+            mime="image/png",
+            use_container_width=True,
+        )
 
     with eval_col:
         st.markdown("### Evaluation")
@@ -322,6 +329,9 @@ def _apply_dashboard_styles() -> None:
             padding: 12px;
             background: #ffffff;
           }
+          div[data-testid="stMetric"] * {
+            color: #151b23 !important;
+          }
           div[data-testid="stImage"] {
             border: 1px solid #111923;
             border-radius: 8px;
@@ -352,6 +362,7 @@ def _apply_dashboard_styles() -> None:
           .st-guide-grid h3 {
             margin: 4px 0 0;
             letter-spacing: 0;
+            color: #151b23;
           }
           .st-guide-hero p,
           .st-guide-note p,

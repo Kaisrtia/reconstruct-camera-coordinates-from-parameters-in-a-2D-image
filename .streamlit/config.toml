@@ -1,0 +1,43 @@
+[client]
+toolbarMode = "minimal"
+
+[theme]
+primaryColor = "#c1121f"
+baseRadius = "0.5rem"
+buttonRadius = "0.45rem"
+borderColor = "#669bbc"
+dataframeBorderColor = "#669bbc"
+dataframeHeaderBackgroundColor = "#669bbc"
+redColor = "#c1121f"
+blueColor = "#669bbc"
+grayColor = "#003049"
+
+[theme.light]
+primaryColor = "#c1121f"
+backgroundColor = "#fdf0d5"
+secondaryBackgroundColor = "#fff8e8"
+textColor = "#003049"
+borderColor = "#669bbc"
+dataframeBorderColor = "#669bbc"
+dataframeHeaderBackgroundColor = "#f4dfb8"
+codeBackgroundColor = "#f4dfb8"
+
+[theme.light.sidebar]
+backgroundColor = "#f7e8c4"
+secondaryBackgroundColor = "#fff8e8"
+textColor = "#003049"
+
+[theme.dark]
+primaryColor = "#c1121f"
+backgroundColor = "#003049"
+secondaryBackgroundColor = "#0b3a55"
+textColor = "#fdf0d5"
+borderColor = "#669bbc"
+dataframeBorderColor = "#669bbc"
+dataframeHeaderBackgroundColor = "#0f425f"
+codeBackgroundColor = "#0b3a55"
+
+[theme.dark.sidebar]
+backgroundColor = "#082f49"
+secondaryBackgroundColor = "#0b3a55"
+textColor = "#fdf0d5"

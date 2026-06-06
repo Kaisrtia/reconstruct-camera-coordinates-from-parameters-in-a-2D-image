@@ -320,15 +320,44 @@ def _apply_dashboard_styles() -> None:
     st.markdown(
         """
         <style>
+          .stApp,
+          div[data-testid="stAppViewContainer"] {
+            background: #003049;
+            color: #fdf0d5;
+          }
+          div[data-testid="stHeader"] {
+            background: rgba(0, 48, 73, 0.88);
+          }
+          div[data-testid="stDeployButton"],
+          .stDeployButton {
+            display: none !important;
+          }
+          section[data-testid="stSidebar"] {
+            background: #fdf0d5;
+            border-right: 1px solid #669bbc;
+          }
+          section[data-testid="stSidebar"] * {
+            color: #003049;
+          }
+          section[data-testid="stSidebar"] div[data-testid="stButton"] button {
+            border: 1px solid #780000;
+            background: #c1121f;
+            color: #fdf0d5;
+            font-weight: 850;
+          }
+          section[data-testid="stSidebar"] div[data-testid="stButton"] button * {
+            color: #fdf0d5 !important;
+          }
           .app-title {
-            border: 1px solid #d7e0e8;
+            border: 1px solid #669bbc;
             border-radius: 8px;
             padding: 18px 20px;
             margin-bottom: 18px;
-            background: #ffffff;
+            background: #fdf0d5;
+            box-shadow: 0 16px 36px rgba(0, 48, 73, 0.22);
           }
           .app-title span {
-            color: #0b6f76;
+            color: #c1121f;
             font-size: 0.78rem;
             font-weight: 800;
             letter-spacing: 0.04em;
@@ -338,32 +367,49 @@ def _apply_dashboard_styles() -> None:
             margin: 4px 0 0;
             font-size: 1.75rem;
             letter-spacing: 0;
+            color: #003049;
           }
           div[data-testid="stMetric"] {
-            border: 1px solid #d7e0e8;
+            border: 1px solid #669bbc;
             border-radius: 8px;
             padding: 12px;
-            background: #ffffff;
+            background: #fdf0d5;
+            box-shadow: 0 10px 24px rgba(0, 48, 73, 0.16);
           }
           div[data-testid="stMetric"] * {
-            color: #151b23 !important;
+            color: #003049 !important;
           }
           div[data-testid="stImage"] {
-            border: 1px solid #111923;
+            border: 1px solid #669bbc;
             border-radius: 8px;
             padding: 10px;
-            background: #101820;
+            background: #003049;
+          }
+          div[data-testid="stDownloadButton"] button {
+            border: 1px solid #780000;
+            border-radius: 8px;
+            background: #c1121f;
+            color: #fdf0d5;
+            font-weight: 850;
+            transition: background 160ms ease, transform 160ms ease, border-color 160ms ease;
+          }
+          div[data-testid="stDownloadButton"] button:hover {
+            border-color: #780000;
+            background: #780000;
+            color: #fdf0d5;
+            transform: translateY(-1px);
           }
           .nav-panel {
-            border: 1px solid #d7e0e8;
+            border: 1px solid #669bbc;
             border-radius: 8px;
             padding: 12px;
             margin-bottom: 10px;
-            background: linear-gradient(135deg, #ffffff 0%, #eef8f7 100%);
+            background: linear-gradient(135deg, #fdf0d5 0%, rgba(102, 155, 188, 0.32) 100%);
+            box-shadow: 0 12px 28px rgba(0, 48, 73, 0.18);
           }
           .nav-panel span {
             display: block;
-            color: #0b6f76;
+            color: #c1121f;
             font-size: 0.72rem;
             font-weight: 850;
             letter-spacing: 0.04em;
@@ -372,7 +418,7 @@ def _apply_dashboard_styles() -> None:
           .nav-panel strong {
             display: block;
             margin-top: 2px;
-            color: #151b23;
+            color: #003049;
             font-size: 0.95rem;
           }
           div[data-testid="stSegmentedControl"] {
@@ -380,15 +426,24 @@ def _apply_dashboard_styles() -> None:
           }
           div[data-testid="stSegmentedControl"] label {
             min-height: 40px;
+            border: 1px solid #669bbc;
             border-radius: 8px;
+            background: rgba(102, 155, 188, 0.16);
             font-weight: 800;
+            transition: border-color 160ms ease, background 160ms ease, transform 160ms ease;
+          }
+          div[data-testid="stSegmentedControl"] label:hover {
+            border-color: #c1121f;
+            background: rgba(193, 18, 31, 0.12);
+            transform: translateY(-1px);
           }
           .st-guide-hero,
           .st-guide-note,
           .st-guide-grid article {
-            border: 1px solid #d7e0e8;
+            border: 1px solid #669bbc;
             border-radius: 8px;
-            background: #ffffff;
+            background: #fdf0d5;
+            box-shadow: 0 12px 28px rgba(0, 48, 73, 0.16);
           }
           .st-guide-hero,
           .st-guide-note {
@@ -396,7 +451,7 @@ def _apply_dashboard_styles() -> None:
             margin-bottom: 16px;
           }
           .st-guide-hero span {
-            color: #0b6f76;
+            color: #c1121f;
             font-size: 0.78rem;
             font-weight: 800;
             letter-spacing: 0.04em;
@@ -407,12 +462,12 @@ def _apply_dashboard_styles() -> None:
           .st-guide-grid h3 {
             margin: 4px 0 0;
             letter-spacing: 0;
-            color: #151b23;
+            color: #003049;
           }
           .st-guide-hero p,
           .st-guide-note p,
           .st-guide-grid p {
-            color: #607083;
+            color: #003049;
             margin-bottom: 0;
           }
           .st-guide-grid {
@@ -423,9 +478,15 @@ def _apply_dashboard_styles() -> None:
           }
           .st-guide-grid article {
             padding: 14px;
+            transition: transform 160ms ease, border-color 160ms ease, box-shadow 160ms ease;
+          }
+          .st-guide-grid article:hover {
+            border-color: #c1121f;
+            box-shadow: 0 16px 34px rgba(120, 0, 0, 0.16);
+            transform: translateY(-2px);
           }
           .st-guide-grid strong {
-            color: #0b6f76;
+            color: #c1121f;
           }
           @media (max-width: 900px) {
             .st-guide-grid {

@@ -1,18 +1,19 @@
 :root {
   color-scheme: light;
-  --bg: #eef2f5;
-  --surface: #ffffff;
-  --surface-soft: #f7f9fb;
-  --border: #d7e0e8;
-  --border-strong: #bdcbd7;
-  --text: #151b23;
-  --muted: #607083;
-  --accent: #0b6f76;
-  --accent-weak: #e5f4f3;
-  --blue: #295b9f;
-  --red: #b33a32;
-  --shadow: 0 18px 48px rgba(40, 53, 68, 0.12);
-  --code-bg: #edf2f6;
+  --bg: #003049;
+  --surface: #fdf0d5;
+  --surface-soft: rgba(102, 155, 188, 0.18);
+  --border: #669bbc;
+  --border-strong: #003049;
+  --text: #003049;
+  --muted: #003049;
+  --accent: #c1121f;
+  --accent-dark: #780000;
+  --accent-weak: rgba(102, 155, 188, 0.28);
+  --blue: #003049;
+  --red: #c1121f;
+  --shadow: 0 18px 48px rgba(0, 48, 73, 0.26);
+  --code-bg: rgba(102, 155, 188, 0.22);
 }
 
 * {
@@ -37,7 +38,7 @@ body {
   min-height: 72px;
   padding: 14px 24px;
   border-bottom: 1px solid var(--border);
-  background: rgba(255, 255, 255, 0.92);
+  background: rgba(253, 240, 213, 0.96);
   backdrop-filter: blur(10px);
 }
 
@@ -75,7 +76,7 @@ body {
 }
 
 .app-nav a:hover {
-  border-color: rgba(11, 111, 118, 0.32);
+  border-color: rgba(193, 18, 31, 0.32);
   background: var(--accent-weak);
   color: var(--accent);
 }
@@ -141,11 +142,11 @@ h3 {
 
 button {
   min-height: 40px;
-  border: 1px solid #07565b;
+  border: 1px solid var(--accent-dark);
   border-radius: 7px;
   padding: 0 15px;
   background: var(--accent);
-  color: #ffffff;
+  color: #fdf0d5;
   font: inherit;
   font-weight: 800;
   cursor: pointer;
@@ -153,7 +154,7 @@ button {
 }
 
 button:hover {
-  background: #07565b;
+  background: var(--accent-dark);
 }
 
 .input-card {
@@ -169,7 +170,7 @@ section.input-card {
 
 .input-card h3 {
   margin-bottom: 10px;
-  color: #415163;
+  color: var(--text);
 }
 
 details.input-card {
@@ -182,7 +183,7 @@ summary {
   justify-content: space-between;
   min-height: 44px;
   padding: 0 13px;
-  color: #415163;
+  color: var(--text);
   font-weight: 800;
   cursor: pointer;
   list-style: none;
@@ -199,8 +200,8 @@ summary::after {
   width: 24px;
   height: 24px;
   border-radius: 999px;
-  background: #e8eef3;
-  color: var(--muted);
+  background: var(--border);
+  color: #fdf0d5;
   font-weight: 800;
 }
 
@@ -218,7 +219,7 @@ label {
   display: grid;
   gap: 6px;
   min-width: 0;
-  color: #263341;
+  color: var(--text);
   font-size: 0.84rem;
   font-weight: 750;
 }
@@ -226,10 +227,10 @@ label {
 input {
   width: 100%;
   min-height: 38px;
-  border: 1px solid #c4d1dd;
+  border: 1px solid var(--border);
   border-radius: 7px;
   padding: 7px 9px;
-  background: #ffffff;
+  background: #fdf0d5;
   color: var(--text);
   font: inherit;
   font-weight: 450;
@@ -237,7 +238,7 @@ input {
 
 input:focus {
   border-color: var(--accent);
-  outline: 3px solid rgba(11, 111, 118, 0.16);
+  outline: 3px solid rgba(193, 18, 31, 0.18);
 }
 
 input[type="file"] {
@@ -254,11 +255,11 @@ input[type="file"] {
 }
 
 .alert {
-  border: 1px solid #efb4ac;
+  border: 1px solid var(--accent);
   border-radius: 8px;
   padding: 10px 12px;
-  background: #fff3f1;
-  color: #9e2f24;
+  background: #fdf0d5;
+  color: var(--accent-dark);
   font-weight: 750;
 }
 
@@ -290,9 +291,9 @@ input[type="file"] {
   justify-content: center;
   min-height: 420px;
   margin: 0;
-  border: 1px solid #111923;
+  border: 1px solid var(--border);
   border-radius: 8px;
-  background: #101820;
+  background: var(--blue);
   overflow: hidden;
 }
 
@@ -315,18 +316,18 @@ input[type="file"] {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  border: 1px solid #07565b;
+  border: 1px solid var(--accent-dark);
   border-radius: 7px;
   padding: 0 13px;
   background: var(--accent);
-  color: #ffffff;
+  color: #fdf0d5;
   font-size: 0.86rem;
   font-weight: 800;
   text-decoration: none;
 }
 
 .download-link:hover {
-  background: #07565b;
+  background: var(--accent-dark);
 }
 
 .empty-output {
@@ -360,7 +361,7 @@ input[type="file"] {
 }
 
 .metric-card.primary {
-  border-color: rgba(11, 111, 118, 0.34);
+  border-color: var(--accent);
   background: var(--accent-weak);
 }
 
@@ -403,7 +404,7 @@ input[type="file"] {
   gap: 6px;
   padding: 10px;
   border-bottom: 1px solid var(--border);
-  background: #ffffff;
+  background: var(--surface);
   overflow-x: auto;
 }
 
@@ -426,7 +427,7 @@ input[type="file"] {
 #tab-matrices:checked ~ .tab-list label[for="tab-matrices"],
 #tab-conversion:checked ~ .tab-list label[for="tab-conversion"],
 #tab-axis:checked ~ .tab-list label[for="tab-axis"] {
-  border-color: rgba(11, 111, 118, 0.28);
+  border-color: var(--accent);
   background: var(--accent-weak);
   color: var(--accent);
 }
@@ -455,7 +456,7 @@ input[type="file"] {
   border: 1px solid var(--border);
   border-radius: 8px;
   padding: 12px;
-  background: #ffffff;
+  background: var(--surface);
 }
 
 .vector-grid span {
@@ -488,7 +489,7 @@ code {
 
 .matrix-card h3 {
   margin-bottom: 9px;
-  color: #344253;
+  color: var(--text);
 }
 
 .matrix {
@@ -502,7 +503,7 @@ code {
 .matrix td {
   border: 1px solid var(--border);
   padding: 7px;
-  background: #ffffff;
+  background: var(--surface);
   overflow-wrap: anywhere;
   text-align: right;
 }
@@ -522,7 +523,7 @@ code {
 .conversion-table td {
   border: 1px solid var(--border);
   padding: 8px;
-  background: #ffffff;
+  background: var(--surface);
   text-align: left;
   vertical-align: top;
 }
@@ -578,11 +579,11 @@ code {
   align-items: center;
   min-height: 38px;
   margin-top: 14px;
-  border: 1px solid #07565b;
+  border: 1px solid var(--accent-dark);
   border-radius: 7px;
   padding: 0 13px;
   background: var(--accent);
-  color: #ffffff;
+  color: #fdf0d5;
   font-weight: 800;
   text-decoration: none;
 }

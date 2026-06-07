@@ -271,10 +271,9 @@ def _render_result(result: ReconstructionResult) -> None:
 
     with eval_col:
         st.markdown("### Evaluation")
-        metric_row_1 = st.columns(3)
-        metric_row_1[0].metric("RMSE", f"{result.pnp.reprojection_rmse:.6g} px")
-        metric_row_1[1].metric("Mean Error", f"{result.pnp.reprojection_mean:.6g} px")
-        metric_row_1[2].metric("Max Error", f"{result.pnp.reprojection_max:.6g} px")
+        st.metric("RMSE", f"{result.pnp.reprojection_rmse:.6g} px")
+        st.metric("Mean Error", f"{result.pnp.reprojection_mean:.6g} px")
+        st.metric("Max Error", f"{result.pnp.reprojection_max:.6g} px")
 
         metric_row_2 = st.columns(2)
         metric_row_2[0].metric("Detected Points", f"{result.checkerboard.image_points.shape[0]}")
@@ -487,6 +486,55 @@ def _apply_dashboard_styles(theme: str) -> None:
             color: var(--cr-text) !important;
           }
 
+          div[data-testid="stFileUploader"] [data-testid="stFileUploaderDropzone"],
+          div[data-testid="stFileUploader"] [data-testid="stFileUploaderDropzone"] * {
+            color: var(--cr-text) !important;
+          }
+
+          div[data-testid="stFileUploaderFile"],
+          div[data-testid="stFileUploader"] li,
+          div[data-testid="stFileUploader"] [data-testid*="file"],
+          div[data-testid="stFileUploader"] [class*="uploadedFile"],
+          div[data-testid="stFileUploader"] [class*="UploadedFile"],
+          div[data-testid="stFileUploader"] [class*="fileData"] {
+            border: 1px solid var(--cr-steel) !important;
+            border-radius: 8px !important;
+            background: #071f31 !important;
+            color: #fdf0d5 !important;
+          }
+
+          div[data-testid="stFileUploaderFile"] *,
+          div[data-testid="stFileUploader"] li *,
+          div[data-testid="stFileUploader"] [data-testid*="file"] *,
+          div[data-testid="stFileUploader"] [class*="uploadedFile"] *,
+          div[data-testid="stFileUploader"] [class*="UploadedFile"] *,
+          div[data-testid="stFileUploader"] [class*="fileData"] * {
+            color: #fdf0d5 !important;
+            fill: #fdf0d5 !important;
+            opacity: 1 !important;
+          }
+
+          div[data-testid="stFileUploaderFileName"],
+          div[data-testid="stFileUploaderFileSize"],
+          div[data-testid="stFileUploader"] [title],
+          div[data-testid="stFileUploader"] small,
+          div[data-testid="stFileUploader"] span,
+          div[data-testid="stFileUploader"] p {
+            color: #fdf0d5 !important;
+            opacity: 1 !important;
+          }
+
+          div[data-testid="stFileUploaderFileSize"],
+          div[data-testid="stFileUploader"] small {
+            color: #c9dde8 !important;
+          }
+
+          div[data-testid="stFileUploader"] svg,
+          div[data-testid="stFileUploader"] svg path {
+            fill: #fdf0d5 !important;
+            color: #fdf0d5 !important;
+          }
+
           div[data-testid="stFileUploader"] button,
           div[data-testid="stFileUploader"] [role="button"] {
             border: 1px solid var(--cr-accent-dark) !important;
@@ -569,10 +617,29 @@ def _apply_dashboard_styles(theme: str) -> None:
             padding: 12px;
             background: linear-gradient(180deg, var(--cr-card), color-mix(in srgb, var(--cr-card) 84%, var(--cr-bg) 16%));
             box-shadow: 0 10px 24px rgba(0, 48, 73, 0.16);
+            margin-bottom: 10px;
           }
 
           div[data-testid="stMetric"] * {
             color: var(--cr-text) !important;
+          }
+
+          div[data-testid="stMetricValue"],
+          div[data-testid="stMetricValue"] > div,
+          div[data-testid="stMetricValue"] span,
+          div[data-testid="stMetricValue"] div {
+            max-width: none !important;
+            overflow: visible !important;
+            text-overflow: clip !important;
+            white-space: normal !important;
+            overflow-wrap: anywhere !important;
+            line-height: 1.15 !important;
+          }
+
+          div[data-testid="stMetricLabel"],
+          div[data-testid="stMetricLabel"] * {
+            color: var(--cr-muted) !important;
+            font-weight: 850 !important;
           }
 
           div[data-testid="stImage"] {
